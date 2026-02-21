@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+  color: #0f172a;
+  background-color: #f5f7fb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+  background: #f5f7fb;
+  color: #0f172a;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(83, 165, 255, 0.15), transparent 45%),
+    radial-gradient(circle at 80% 0%, rgba(244, 114, 182, 0.15), transparent 55%);
+  z-index: -1;
+}
+
+#root {
+  min-height: 100vh;
+}
