@@ -8,7 +8,6 @@ import {
   LinearProgress,
   List,
   ListItem,
-  ListItemSecondaryAction,
   ListItemText,
   Paper,
   Stack,
@@ -68,6 +67,103 @@ export const TaskList = ({
         gap: 1,
         flexDirection: { xs: 'column', sm: 'row' },
       }}
+      secondaryAction={
+        <Stack direction="row" spacing={1} flexWrap="wrap" justifyContent="flex-end">
+          {task.status === 'PENDING' && (
+            <Tooltip title="Start task">
+              <span>
+                <IconButton
+                  edge="end"
+                  color="primary"
+                  disabled={isActionBusy(task.id, 'transition')}
+                  onClick={() => onTransition(task.id, 'IN_PROGRESS')}
+                  aria-label="start task"
+                  size="large"
+                  sx={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: 3,
+                    backgroundColor: 'primary.main',
+                    color: 'primary.contrastText',
+                    '&:hover': { backgroundColor: 'primary.dark' },
+                  }}
+                >
+                  <PlayArrowIcon fontSize="inherit" />
+                </IconButton>
+              </span>
+            </Tooltip>
+          )}
+          {task.status === 'IN_PROGRESS' && (
+            <Tooltip title="Mark as done">
+              <span>
+                <IconButton
+                  edge="end"
+                  color="success"
+                  disabled={isActionBusy(task.id, 'markDone')}
+                  onClick={() => onMarkDone(task.id)}
+                  aria-label="mark task done"
+                  size="large"
+                  sx={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: 3,
+                    backgroundColor: 'success.main',
+                    color: 'success.contrastText',
+                    '&:hover': { backgroundColor: 'success.dark' },
+                  }}
+                >
+                  <CheckCircleIcon fontSize="inherit" />
+                </IconButton>
+              </span>
+            </Tooltip>
+          )}
+          {task.status === 'DONE' && (
+            <Tooltip title="Archive task">
+              <span>
+                <IconButton
+                  edge="end"
+                  color="secondary"
+                  disabled={isActionBusy(task.id, 'transition')}
+                  onClick={() => onTransition(task.id, 'ARCHIVED')}
+                  aria-label="archive task"
+                  size="large"
+                  sx={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: 3,
+                    backgroundColor: 'secondary.main',
+                    color: 'secondary.contrastText',
+                    '&:hover': { backgroundColor: 'secondary.dark' },
+                  }}
+                >
+                  <ArchiveIcon fontSize="inherit" />
+                </IconButton>
+              </span>
+            </Tooltip>
+          )}
+          <Tooltip title="Edit">
+            <span>
+              <IconButton edge="end" onClick={() => onEdit(task)} aria-label="edit task" size="large">
+                <EditIcon fontSize="inherit" />
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Tooltip title="Delete">
+            <span>
+              <IconButton
+                edge="end"
+                color="error"
+                disabled={isActionBusy(task.id, 'delete')}
+                onClick={() => onDelete(task.id)}
+                aria-label="delete task"
+                size="large"
+              >
+                <DeleteIcon fontSize="inherit" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        </Stack>
+      }
     >
       <ListItemText
         primaryTypographyProps={{ variant: 'h6', fontWeight: 600 }}
@@ -75,101 +171,6 @@ export const TaskList = ({
         secondary={task.description || 'No description provided'}
         secondaryTypographyProps={{ color: 'text.secondary' }}
       />
-      <ListItemSecondaryAction sx={{ right: 0, display: 'flex', gap: 1 }}>
-        {task.status === 'PENDING' && (
-          <Tooltip title="Start task">
-            <span>
-              <IconButton
-                edge="end"
-                color="primary"
-                disabled={isActionBusy(task.id, 'transition')}
-                onClick={() => onTransition(task.id, 'IN_PROGRESS')}
-                aria-label="start task"
-                size="large"
-                sx={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: 3,
-                  backgroundColor: 'primary.main',
-                  color: 'primary.contrastText',
-                  '&:hover': { backgroundColor: 'primary.dark' },
-                }}
-              >
-                <PlayArrowIcon fontSize="inherit" />
-              </IconButton>
-            </span>
-          </Tooltip>
-        )}
-        {task.status === 'IN_PROGRESS' && (
-          <Tooltip title="Mark as done">
-            <span>
-              <IconButton
-                edge="end"
-                color="success"
-                disabled={isActionBusy(task.id, 'markDone')}
-                onClick={() => onMarkDone(task.id)}
-                aria-label="mark task done"
-                size="large"
-                sx={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: 3,
-                  backgroundColor: 'success.main',
-                  color: 'success.contrastText',
-                  '&:hover': { backgroundColor: 'success.dark' },
-                }}
-              >
-                <CheckCircleIcon fontSize="inherit" />
-              </IconButton>
-            </span>
-          </Tooltip>
-        )}
-        {task.status === 'DONE' && (
-          <Tooltip title="Archive task">
-            <span>
-              <IconButton
-                edge="end"
-                color="secondary"
-                disabled={isActionBusy(task.id, 'transition')}
-                onClick={() => onTransition(task.id, 'ARCHIVED')}
-                aria-label="archive task"
-                size="large"
-                sx={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: 3,
-                  backgroundColor: 'secondary.main',
-                  color: 'secondary.contrastText',
-                  '&:hover': { backgroundColor: 'secondary.dark' },
-                }}
-              >
-                <ArchiveIcon fontSize="inherit" />
-              </IconButton>
-            </span>
-          </Tooltip>
-        )}
-        <Tooltip title="Edit">
-          <span>
-            <IconButton edge="end" onClick={() => onEdit(task)} aria-label="edit task" size="large">
-              <EditIcon fontSize="inherit" />
-            </IconButton>
-          </span>
-        </Tooltip>
-        <Tooltip title="Delete">
-          <span>
-            <IconButton
-              edge="end"
-              color="error"
-              disabled={isActionBusy(task.id, 'delete')}
-              onClick={() => onDelete(task.id)}
-              aria-label="delete task"
-              size="large"
-            >
-              <DeleteIcon fontSize="inherit" />
-            </IconButton>
-          </span>
-        </Tooltip>
-      </ListItemSecondaryAction>
     </ListItem>
   );
 
@@ -231,6 +232,23 @@ export const TaskList = ({
                         gap: 1,
                         flexDirection: { xs: 'column', sm: 'row' },
                       }}
+                      secondaryAction={
+                        <Stack direction="row" spacing={1}>
+                          <Tooltip title="Delete">
+                            <span>
+                              <IconButton
+                                edge="end"
+                                color="error"
+                                disabled={isActionBusy(task.id, 'delete')}
+                                onClick={() => onDelete(task.id)}
+                                aria-label="delete task"
+                              >
+                                <DeleteIcon fontSize="medium" />
+                              </IconButton>
+                            </span>
+                          </Tooltip>
+                        </Stack>
+                      }
                     >
                       <ListItemText
                         primary={
@@ -241,21 +259,6 @@ export const TaskList = ({
                         secondary={task.description || 'No description provided'}
                         secondaryTypographyProps={{ color: 'text.secondary' }}
                       />
-                      <ListItemSecondaryAction sx={{ right: 0, display: 'flex', gap: 1 }}>
-                        <Tooltip title="Delete">
-                          <span>
-                            <IconButton
-                              edge="end"
-                              color="error"
-                              disabled={isActionBusy(task.id, 'delete')}
-                              onClick={() => onDelete(task.id)}
-                              aria-label="delete task"
-                            >
-                              <DeleteIcon fontSize="medium" />
-                            </IconButton>
-                          </span>
-                        </Tooltip>
-                      </ListItemSecondaryAction>
                     </ListItem>
                   ))}
                 </List>
