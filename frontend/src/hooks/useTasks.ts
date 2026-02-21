@@ -21,7 +21,7 @@ export const useTasks = () => {
       throw new Error('You must be authenticated.');
     }
 
-    return getAccessToken();
+    await getAccessToken();
   }, [getAccessToken, isAuthenticated]);
 
   const fetchTasks = useCallback(async () => {
@@ -32,8 +32,8 @@ export const useTasks = () => {
 
     setLoading(true);
     try {
-      const token = await ensureToken();
-      const data = await taskApi.list(token);
+      await ensureToken();
+      const data = await taskApi.list();
       setTasks(data);
     } catch (error) {
       console.error(error);
@@ -55,8 +55,8 @@ export const useTasks = () => {
     async (payload: TaskPayload) => {
       setPendingAction({ type: 'create' });
       try {
-        const token = await ensureToken();
-        const created = await taskApi.create(token, payload);
+        await ensureToken();
+        const created = await taskApi.create(payload);
         setTasks((prev) => [created, ...prev]);
         enqueueSnackbar('Task created', { variant: 'success' });
       } catch (error) {
@@ -74,8 +74,8 @@ export const useTasks = () => {
     async (taskId: string, payload: TaskPayload) => {
       setPendingAction({ type: 'update', taskId });
       try {
-        const token = await ensureToken();
-        const updated = await taskApi.update(token, taskId, payload);
+        await ensureToken();
+        const updated = await taskApi.update(taskId, payload);
         setTasks((prev) => prev.map((task) => (task.id === taskId ? updated : task)));
         enqueueSnackbar('Task updated', { variant: 'success' });
       } catch (error) {
@@ -93,8 +93,8 @@ export const useTasks = () => {
     async (taskId: string) => {
       setPendingAction({ type: 'delete', taskId });
       try {
-        const token = await ensureToken();
-        await taskApi.remove(token, taskId);
+        await ensureToken();
+        await taskApi.remove(taskId);
         setTasks((prev) => prev.filter((task) => task.id !== taskId));
         enqueueSnackbar('Task deleted', { variant: 'info' });
       } catch (error) {
@@ -112,8 +112,8 @@ export const useTasks = () => {
     async (taskId: string) => {
       setPendingAction({ type: 'markDone', taskId });
       try {
-        const token = await ensureToken();
-        const updated = await taskApi.markDone(token, taskId);
+        await ensureToken();
+        const updated = await taskApi.markDone(taskId);
         setTasks((prev) => prev.map((task) => (task.id === taskId ? updated : task)));
         enqueueSnackbar('Task marked as done', { variant: 'success' });
       } catch (error) {
@@ -131,8 +131,8 @@ export const useTasks = () => {
     async (taskId: string, targetStatus: TaskStatus) => {
       setPendingAction({ type: 'transition', taskId });
       try {
-        const token = await ensureToken();
-        const updated = await taskApi.transition(token, taskId, targetStatus);
+        await ensureToken();
+        const updated = await taskApi.transition(taskId, targetStatus);
         setTasks((prev) => prev.map((task) => (task.id === taskId ? updated : task)));
         enqueueSnackbar('Task updated', { variant: 'success' });
       } catch (error) {

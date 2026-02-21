@@ -2,6 +2,7 @@ import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 import type { User } from '@auth0/auth0-react';
 import type { ReactNode } from 'react';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { clearStoredToken, getStoredToken, setStoredToken } from '../services/tokenStorage';
 
 const MissingAuthConfiguration = () => (
   <div
@@ -52,11 +53,12 @@ const AuthStateProvider = ({ children }: { children: ReactNode }) => {
     getAccessTokenSilently,
     error,
   } = useAuth0();
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(() => getStoredToken());
 
   const refreshToken = useCallback(async () => {
     const newToken = await getAccessTokenSilently();
     setToken(newToken);
+    setStoredToken(newToken);
     return newToken;
   }, [getAccessTokenSilently]);
 
@@ -65,6 +67,7 @@ const AuthStateProvider = ({ children }: { children: ReactNode }) => {
       void refreshToken();
     } else {
       setToken(null);
+      clearStoredToken();
     }
   }, [isAuthenticated, refreshToken]);
 
@@ -73,6 +76,11 @@ const AuthStateProvider = ({ children }: { children: ReactNode }) => {
       console.error('Auth0 error', error);
     }
   }, [error]);
+
+  const handleLogout = useCallback(() => {
+    clearStoredToken();
+    logout({ logoutParams: { returnTo: window.location.origin } });
+  }, [logout]);
 
   const value = useMemo<AuthContextValue>(
     () => ({
@@ -83,12 +91,10 @@ const AuthStateProvider = ({ children }: { children: ReactNode }) => {
       login: async () => {
         await loginWithRedirect();
       },
-      logout: () => {
-        logout({ logoutParams: { returnTo: window.location.origin } });
-      },
+      logout: handleLogout,
       getAccessToken: refreshToken,
     }),
-    [isAuthenticated, isLoading, user, token, loginWithRedirect, logout, refreshToken],
+    [isAuthenticated, isLoading, user, token, loginWithRedirect, handleLogout, refreshToken],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -109,7 +115,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       login: async () => {
         alert('Configure Auth0 variables in frontend/.env before logging in.');
       },
-      logout: () => undefined,
+      logout: () => {
+        clearStoredToken();
+      },
       getAccessToken: async () => {
         throw new Error('Auth0 is not configured');
       },
