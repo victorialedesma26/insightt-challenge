@@ -3,7 +3,7 @@ import express from 'express';
 import { apiRouter } from './routes';
 import { errorHandler } from './middleware/error.middleware';
 import { AppError } from './shared/errors/AppError';
-import { requestLogger } from './middleware/request-log.middleware';
+import { requestLogger } from './middleware/requestLogger.middleware';
 
 export const app = express();
 

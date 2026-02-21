@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ErrorCodes = void 0;
+exports.ErrorCodes = {
+    VALIDATION_ERROR: 'VALIDATION_ERROR',
+    AUTH_REQUIRED: 'AUTH_REQUIRED',
+    INVALID_TOKEN: 'INVALID_TOKEN',
+    TASK_NOT_FOUND: 'TASK_NOT_FOUND',
+    ACCESS_DENIED: 'ACCESS_DENIED',
+    INVALID_STATUS_TRANSITION: 'INVALID_STATUS_TRANSITION',
+    STATUS_CONFLICT: 'STATUS_CONFLICT',
+    TASK_LOCKED: 'TASK_LOCKED',
+    CONCURRENT_UPDATE: 'CONCURRENT_UPDATE',
+    INTERNAL_ERROR: 'INTERNAL_ERROR',
+};
+//# sourceMappingURL=errorCodes.js.map
