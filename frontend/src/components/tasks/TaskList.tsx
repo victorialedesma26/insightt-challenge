@@ -48,15 +48,6 @@ export const TaskList = ({
   pendingTaskId,
   pendingAction,
 }: TaskListProps) => {
-  const renderEmptyState = () => (
-    <Stack spacing={2} alignItems="center" py={6} textAlign="center">
-      <Typography variant="h6">No tasks yet</Typography>
-      <Typography color="text.secondary" maxWidth={360}>
-        Create your first task to keep track of priorities and progress.
-      </Typography>
-    </Stack>
-  );
-
   const isActionBusy = (taskId: string, action: 'delete' | 'markDone' | 'transition') =>
     pendingTaskId === taskId && pendingAction === action;
 
@@ -197,10 +188,7 @@ export const TaskList = ({
         </Tooltip>
       </Stack>
       {loading && <LinearProgress sx={{ mb: 2 }} />}
-      {tasks.length === 0 && !loading ? (
-        renderEmptyState()
-      ) : (
-        <Stack spacing={3}>
+      <Stack spacing={3}>
           {activeGroups.map((group) => (
             <Box key={group.status}>
               <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
@@ -274,9 +262,7 @@ export const TaskList = ({
               </AccordionDetails>
             </Accordion>
           )}
-          {!hasActiveTasks && archivedTasks.length === 0 && renderEmptyState()}
         </Stack>
-      )}
       <Box mt={3}>
         <Typography variant="caption" color="text.secondary">
           Use the controls on each card to move tasks through the workflow or archive them once completed.
